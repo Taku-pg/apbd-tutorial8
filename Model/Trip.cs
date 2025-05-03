@@ -2,7 +2,7 @@ namespace apbd_tutorial8.Model;
 
 public class Trip
 {
-    public int Id { get; set; }
+    public int IdTrip { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public DateTime DateFrom { get; set; }

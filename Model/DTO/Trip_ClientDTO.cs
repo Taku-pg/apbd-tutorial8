@@ -1,6 +1,6 @@
 namespace apbd_tutorial8.Model.DTO;
 
-public class Trip_ClientDTO
+public class Trip_ClientDTO 
 {
     public int IdClient { get; set; }
     public List<Client_Trip> Trips { get; set; } = new List<Client_Trip>();

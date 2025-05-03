@@ -1,14 +1,18 @@
 using apbd_tutorial8.Model.DTO;
 using apbd_tutorial8.Model;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace apbd_tutorial8.Repository;
 
 public class Trip_CountryRepository : ITrip_CountryRepository
 {
-    private readonly string _connectionString="Data Source=localhost, 1433; User=SA; Password=yourStrong(!)Password; " +
-                                             "Initial Catalog=apbd; Integrated Security=False;Connect " +
-                                             "Timeout=30;Encrypt=False;Trust Server Certificate=False";
+    private readonly IConfiguration _configuration;
+
+    public Trip_CountryRepository(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     
     public async Task<List<Trip_CountryDTO>> getTripsAsync()
     {
@@ -17,7 +21,7 @@ public class Trip_CountryRepository : ITrip_CountryRepository
             " JOIN Country_Trip ON Trip.IdTrip=Country_Trip.IdTrip"+
             " JOIN Country on Country.IdCountry=Country_Trip.IdCountry";
 
-        using (SqlConnection conn = new SqlConnection(_connectionString))
+        using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("apbd-db")))
         using (SqlCommand cmd = new SqlCommand(command, conn))
         {
             await conn.OpenAsync();

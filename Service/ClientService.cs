@@ -1,3 +1,4 @@
+using apbd_tutorial8.Model;
 using apbd_tutorial8.Model.DTO;
 using apbd_tutorial8.Repository;
 
@@ -12,9 +13,25 @@ public class ClientService : IClientService
         _clientRepository = clientRepository;
     }
     
-    public async Task<Trip_ClientDTO> GetTripByClientIdAsync(int clientId)
+    public async Task<ServiceResult<Trip_ClientDTO>> GetTripByClientIdAsync(int clientId)
     {
         var client= await _clientRepository.GetTripByClientIdAsync(clientId);
-        return client;
+        
+        
+        if (client == null)
+        {
+            return ServiceResult<Trip_ClientDTO>.Error("Client not found");
+        }
+        if (!client.Trips.Any())
+        { 
+            return ServiceResult<Trip_ClientDTO>.Error("No trips found");
+        }
+        return ServiceResult<Trip_ClientDTO>.Ok(client);
+    }
+
+    public async Task<int> addClientAsync(Client client)
+    {
+        var id= await _clientRepository.AddClientAsync(client);
+        return id;
     }
 }

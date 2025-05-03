@@ -8,11 +8,5 @@ public class Trip_CountryDTO
     public DateTime DateFrom { get; set; }
     public DateTime DateTo { get; set; }
     public int MaxPeople { get; set; }
-    public List<Country> Countries { get; set; }
-}
-
-public class Country
-{
-    public int IdCountry { get; set; }
-    public string Name { get; set; }
+    public List<Country> Countries { get; set; }=new List<Country>();
 }

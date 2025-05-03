@@ -1,9 +1,14 @@
+using apbd_tutorial8.Repository;
+using apbd_tutorial8.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddScoped<ITrip_CountryRepository, Trip_CountryRepository>();
+builder.Services.AddScoped<ITrip_CountryService, Trip_CountryService>();
 
 var app = builder.Build();
 

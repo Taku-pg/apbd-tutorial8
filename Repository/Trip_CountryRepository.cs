@@ -6,16 +6,14 @@ namespace apbd_tutorial8.Repository;
 
 public class Trip_CountryRepository : ITrip_CountryRepository
 {
-    /*private readonly string _connectionString="Data Source=localhost, 1433; User=SA; Password=yourStrong(!)Password; " +
-                                             "Initial Catalog=musing_raman; Integrated Security=False;Connect " +
-                                             "Timeout=30;Encrypt=False;Trust Server Certificate=False";*/
+    private readonly string _connectionString="Data Source=localhost, 1433; User=SA; Password=yourStrong(!)Password; " +
+                                             "Initial Catalog=apbd; Integrated Security=False;Connect " +
+                                             "Timeout=30;Encrypt=False;Trust Server Certificate=False";
     
-    private readonly string _connectionString="Data source=localhost,1433;Database=master;User Id=SA;Password=yourStrong(!)Password;TrustServerCertificate=true;";
-
     public async Task<List<Trip_CountryDTO>> getTripsAsync()
     {
         var trips = new List<Trip_CountryDTO>();
-        string command = "SELECT *, Trip.IdTrip AS tripId, Country.IdCountry AS countryId, Country.name AS countryName FROM Trip"+ 
+        string command = "SELECT *, Country.name AS countryName FROM Trip"+ 
             " JOIN Country_Trip ON Trip.IdTrip=Country_Trip.IdTrip"+
             " JOIN Country on Country.IdCountry=Country_Trip.IdCountry";
 
@@ -27,13 +25,13 @@ public class Trip_CountryRepository : ITrip_CountryRepository
             {
                 while (await reader.ReadAsync())
                 {
-                    int idTrip=reader.GetInt32(reader.GetOrdinal("tripId"));
+                    int idTrip=reader.GetInt32(reader.GetOrdinal("IdTrip"));
                     string nameTrip = reader.GetString(reader.GetOrdinal("Name"));
                     string description = reader.GetString(reader.GetOrdinal("Description"));
                     DateTime dateFrom = reader.GetDateTime(reader.GetOrdinal("DateFrom"));
                     DateTime dateTo = reader.GetDateTime(reader.GetOrdinal("DateTo"));
                     int max=reader.GetInt32(reader.GetOrdinal("MaxPeople"));
-                    int idCountry=reader.GetInt32(reader.GetOrdinal("countryId"));
+                    int idCountry=reader.GetInt32(reader.GetOrdinal("IdCountry"));
                     string nameCountry = reader.GetString(reader.GetOrdinal("countryName"));
                     
                     var trip=trips.FirstOrDefault(t => t.IdTrip == idTrip);

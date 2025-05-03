@@ -17,9 +17,9 @@ public class TripController : ControllerBase
     }
     
     [HttpGet]
-    public ActionResult<Trip_CountryDTO> Get(int id)
+    public IActionResult Get()
     {
-        var trips = _service.GetTrips();
-        return Ok(trips);
+        var trips = _service.GetTripsAsync();
+        return Ok(trips.Result);
     }
 }

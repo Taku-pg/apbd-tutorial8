@@ -9,6 +9,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITrip_CountryRepository, Trip_CountryRepository>();
 builder.Services.AddScoped<ITrip_CountryService, Trip_CountryService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 var app = builder.Build();
 

@@ -12,9 +12,9 @@ public class Trip_CountryService : ITrip_CountryService
         _repository = repository;
     }
 
-    public IEnumerable<Trip_CountryDTO> GetTrips()
+    public async Task<IEnumerable<Trip_CountryDTO>> GetTripsAsync()
     {
-        var trips = _repository.getTripsAsync();
-        return trips.Result;
+        var trips = await _repository.getTripsAsync();
+        return trips;
     }
 }

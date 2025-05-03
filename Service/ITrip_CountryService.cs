@@ -4,5 +4,5 @@ namespace apbd_tutorial8.Service;
 
 public interface ITrip_CountryService
 {
-    IEnumerable<Trip_CountryDTO> GetTrips();
+    Task<IEnumerable<Trip_CountryDTO>> GetTripsAsync();
 }

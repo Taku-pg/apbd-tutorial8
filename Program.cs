@@ -11,6 +11,10 @@ builder.Services.AddScoped<ITrip_CountryRepository, Trip_CountryRepository>();
 builder.Services.AddScoped<ITrip_CountryService, Trip_CountryService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClient_TripRepository, Client_TripRepository>();
+builder.Services.AddScoped<IClient_TripService, Client_TripService>();
+
+
 
 var app = builder.Build();
 

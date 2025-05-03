@@ -10,10 +10,12 @@ namespace apbd_tutorial8.Controller;
 public class ClientsController : ControllerBase
 {
     private readonly IClientService _clientService;
+    private readonly IClient_TripService _clientTripService;
 
-    public ClientsController(IClientService clientService)
+    public ClientsController(IClientService clientService, IClient_TripService clientTripService)
     {
         _clientService = clientService;
+        _clientTripService = clientTripService;
     }
     
     [HttpGet("{id}/trips")]
@@ -26,7 +28,7 @@ public class ClientsController : ControllerBase
         {
             return NotFound(new{message=client.Result.Message});
         }
-        return Ok(client.Result);
+        return Ok(client.Result.Data);
     }
 
     [HttpPost]
@@ -34,5 +36,16 @@ public class ClientsController : ControllerBase
     {
         var id = _clientService.addClientAsync(client);
         return Ok(id.Result);
+    }
+
+    [HttpPut("{id}/trips/{tripId}")]
+    public IActionResult UpdateTrip(int id, int tripId)
+    {
+        var res=_clientTripService.AddClientTripAsync(id, tripId);
+        if (!res.Result.Success)
+        {
+            return BadRequest(res.Result.Message);
+        }
+        return Ok(res.Result.Data);
     }
 }

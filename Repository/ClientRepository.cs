@@ -29,7 +29,6 @@ public class ClientRepository : IClientRepository
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine("Enter loop");
                     int idClient = reader.GetInt32(reader.GetOrdinal("IdClient"));
                     if (client == null)
                     {

@@ -101,4 +101,18 @@ public class Client_TripRepository : IClient_TripRepository
             return affected == 1;
         }
     }
+
+    public async Task<bool> DeleteTripAsync(int clientId, int tripId)
+    {
+        string query=@"DELETE FROM Client_Trip WHERE IdTrip = @id;";
+
+        using (SqlConnection conn =new SqlConnection(_configuration.GetConnectionString("apbd-db")))
+        using (SqlCommand cmd = new SqlCommand(query, conn))
+        {
+            cmd.Parameters.AddWithValue("@id", tripId);
+            await conn.OpenAsync();
+            int affected = await cmd.ExecuteNonQueryAsync();
+            return affected > 0;
+        }
+    }
 }

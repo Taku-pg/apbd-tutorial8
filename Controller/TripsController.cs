@@ -7,19 +7,19 @@ namespace apbd_tutorial8.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TripController : ControllerBase
+public class TripsController : ControllerBase
 {
     private readonly ITrip_CountryService _service;
 
-    public TripController(ITrip_CountryService service)
+    public TripsController(ITrip_CountryService service)
     {
         _service = service;
     }
     
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        var trips = _service.GetTripsAsync();
-        return Ok(trips.Result);
+        var trips =await _service.GetTripsAsync();
+        return Ok(trips);
     }
 }

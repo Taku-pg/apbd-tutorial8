@@ -23,29 +23,40 @@ public class ClientsController : ControllerBase
     {
         if (id == 0)
             return BadRequest();
-        var client = _clientService.GetTripByClientIdAsync(id);
-        if (!client.Result.Success)
+        var client = await _clientService.GetTripByClientIdAsync(id);
+        if (!client.Success)
         {
-            return NotFound(new{message=client.Result.Message});
+            return NotFound(client.Message);
         }
-        return Ok(client.Result.Data);
+        return Ok(client.Data);
     }
 
     [HttpPost]
-    public IActionResult AddTrip([FromBody] Client client)
+    public async Task<IActionResult> AddTrip([FromBody] Client client)
     {
-        var id = _clientService.addClientAsync(client);
-        return Ok(id.Result);
+        var id =await _clientService.addClientAsync(client);
+        return Ok(id);
     }
 
     [HttpPut("{id}/trips/{tripId}")]
-    public IActionResult UpdateTrip(int id, int tripId)
+    public async Task<IActionResult> UpdateTrip(int id, int tripId)
     {
-        var res=_clientTripService.AddClientTripAsync(id, tripId);
-        if (!res.Result.Success)
+        var res=await _clientTripService.AddClientTripAsync(id, tripId);
+        if (!res.Success)
         {
-            return BadRequest(res.Result.Message);
+            return BadRequest(res.Message);
         }
-        return Ok(res.Result.Data);
+        return Ok(res.Data);
+    }
+
+    [HttpDelete("{id}/trips/{tripId}")]
+    public async Task<IActionResult> DeleteTrip(int id, int tripId)
+    {
+        var res=await _clientTripService.DeleteClientTripAsync(id, tripId);
+        if (!res.Success)
+        {
+            return BadRequest(res.Message);
+        }
+        return Ok(res.Data);
     }
 }

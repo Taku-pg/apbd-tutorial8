@@ -17,32 +17,80 @@ public class Client_TripService :IClient_TripService
 
     public async Task<ServiceResult<string>> AddClientTripAsync(int clientId, int tripId)
     {
-        var trip =_clientTripRepository.GetTripByIdAsync(tripId);
-        if (trip.Result == null)
-        { 
-            return ServiceResult<string>.Error("Trip not found");
-        }
-        var client=_clientTripRepository.GetClientByIdAsync(clientId);
-        if (client.Result == null)
+        var trip = await CheckTripExistence(tripId);
+        if (!trip.Success)
         {
-            return ServiceResult<string>.Error("Client not found");
-        }
-        if (trip.Result.MaxPeople < _clientTripRepository.GetNumberOfParticipantsAsync(tripId).Result)
-        {
-            return ServiceResult<string>.Error("No available seet");
+            return ServiceResult<string>.Error(trip.Message);
         }
         
-        var client_trip=await _clientRepository.GetTripByClientIdAsync(clientId);
+        var client = await CheckClientExistence(clientId);
+        if (!client.Success)
+        {
+            return ServiceResult<string>.Error(client.Message);
+        }
 
-        var isExist=client_trip.Trips.FirstOrDefault(t => t.IdTrip == tripId);
+        if (trip.Data.MaxPeople <= await _clientTripRepository.GetNumberOfParticipantsAsync(tripId))
+        {
+             return ServiceResult<string>.Error("No available place");
+        }
+        
+        var clientTrip=await _clientRepository.GetTripByClientIdAsync(clientId);
+        var isExist=clientTrip.Trips.FirstOrDefault(t => t.IdTrip == tripId);
         if (isExist != null)
         {
             return ServiceResult<string>.Error("Client already registered trip");
         }
-        if(!_clientTripRepository.AddTripAsync(clientId,tripId).Result)
+        if(!await _clientTripRepository.AddTripAsync(clientId,tripId))
         {
-            return ServiceResult<string>.Error("Error, filed to add client to trip");
+            return ServiceResult<string>.Error("Error, failed to add client to trip");
         }
         return ServiceResult<string>.Ok("success");
+    }
+
+    public async Task<ServiceResult<string>> DeleteClientTripAsync(int clientId, int tripId)
+    {
+        var trip = await CheckTripExistence(tripId);
+        if (!trip.Success)
+        {
+            return ServiceResult<string>.Error(trip.Message);
+        }
+        
+        var client = await CheckClientExistence(clientId);
+        if (!client.Success)
+        {
+            return ServiceResult<string>.Error(client.Message);
+        }
+        
+        var client_trip = await _clientRepository.GetTripByClientIdAsync(clientId);
+        var isExist = client_trip.Trips.FirstOrDefault(t => t.IdTrip == tripId);
+        if (isExist == null)
+        {
+             return ServiceResult<string>.Error("Client not registered trip");
+        }
+        if (!await _clientTripRepository.DeleteTripAsync(clientId, tripId))
+        {
+            return ServiceResult<string>.Error("Error, failed to delete client from trip");
+        }
+        return ServiceResult<string>.Ok("success");
+    }
+
+    private async Task<ServiceResult<Trip>> CheckTripExistence(int tripId)
+    {
+        var trip = await _clientTripRepository.GetTripByIdAsync(tripId);
+        if (trip == null)
+        {
+            return ServiceResult<Trip>.Error("Trip not found");
+        }
+        return ServiceResult<Trip>.Ok(trip);
+    }
+
+    private async Task<ServiceResult<Client>> CheckClientExistence(int clientId)
+    {
+        var client=await _clientTripRepository.GetClientByIdAsync(clientId);
+        if (client == null)
+        {
+            return ServiceResult<Client>.Error("Client not found");
+        }
+        return ServiceResult<Client>.Ok(client);
     }
 }

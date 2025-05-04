@@ -5,7 +5,7 @@ namespace apbd_tutorial8.Service;
 
 public class Trip_CountryService : ITrip_CountryService
 {
-    public readonly ITrip_CountryRepository _repository;
+    private readonly ITrip_CountryRepository _repository;
 
     public Trip_CountryService(ITrip_CountryRepository repository)
     {
